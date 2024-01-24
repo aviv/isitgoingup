@@ -7,6 +7,7 @@
     <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone@7.12.1/babel.min.js"></script>
+    <script src="https://unpkg.com/chance@1.1.11/dist/chance.min.js"></script>
     <script
       src="https://kit.fontawesome.com/1da15c100c.js"
       crossorigin="anonymous"
@@ -47,12 +48,19 @@
     <div id="root"></div>
     <script type="text/babel">
       const { useState } = React;
+
       function App() {
         const [coinFlipResult, setCoinFlipResult] = useState();
+        const [inputValue, setInputValue] = useState("");
+
         const flipCoin = () => {
-          const result = Math.floor(Math.random() * 2) + 1;
+          const dt = new Date().toISOString().slice(0, 10);
+          const chance = new Chance(`${dt} ${inputValue.toUpperCase()}`);
+          const result = chance.integer({ min: 1, max: 2 });
           setCoinFlipResult(result);
         };
+
+        const handleInputChange = (e) => setInputValue(e.target.value);
 
         return (
           <section className="section">
@@ -60,9 +68,11 @@
               <div className="stock-field">
                 <span>Is</span>
                 <input
+                  placeholder="it all"
                   type="text"
+                  onChange={handleInputChange}
                   className="input is-medium"
-                  style={{ maxWidth: "200px" }}
+                  style={{ maxWidth: "150px" }}
                 />
                 <span>going up?</span>
               </div>
@@ -89,7 +99,6 @@
         );
       }
 
-      // Render the component
       ReactDOM.render(<App />, document.getElementById("root"));
     </script>
   </body>
